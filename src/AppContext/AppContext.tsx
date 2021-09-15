@@ -13,17 +13,22 @@ export function AppContextProvider({children}: {children: any}) {
   const [temperature, setTemperature] = useState<number>(0);
   const [summary, setSummary] = useState<string>('');
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
   const [forecast, setForeCast] = useState<[number, string][]>([]);
 
   function searchInfo() {
     setHasError(false);
     setIsLoaded(false);
+    setIsLoading(true);
     setCity(searchTerm);
     getWikiData()
       .then(getWeatherData)
       .then(() => {
         setIsLoaded(true);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
 
     function getWikiData(): Promise<[number, number]> {
@@ -78,6 +83,7 @@ export function AppContextProvider({children}: {children: any}) {
         forecast,
         searchTerm,
         isLoaded,
+        isLoading,
         summary,
         temperature,
         weather,
